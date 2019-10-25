@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provide/provide.dart';
 import './pages/index_page.dart';
-import './provide/counter.dart';
 import './provide/app_provide.dart';
 //import './provide/child_category.dart';
 //import './provide/category_goods_list_store.dart';
@@ -12,7 +12,6 @@ import './routers/application.dart';
 //import './provide/car_provide.dart';
 
 void main(){
-  var counter = Counter();
   var appProvide = AppProvide();
 //  var childCategory = ChildCategory();
 //  var categoryGoodsList = CategoryGoodsListStore();
@@ -24,14 +23,14 @@ void main(){
 
   // 将自类状态注入到provider实例中
   providers
-    ..provide(Provider<Counter>.value(counter))
     ..provide(Provider<AppProvide>.value(appProvide))
   ;
   runApp(ProviderNode(providers: providers,child: MyApp(),));
+  SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor:Colors.transparent);
+  SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 }
 
 class MyApp extends StatelessWidget{
-
   @override
   Widget build(BuildContext context) {
     final router = Router();

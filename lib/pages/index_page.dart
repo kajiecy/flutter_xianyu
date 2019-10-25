@@ -94,7 +94,17 @@ class _IndexPageState extends State<IndexPage> {
     print('22222222');
     ScreenUtil.instance = ScreenUtil(width: 750,height: 1334)..init(context);
     return Scaffold(
-      backgroundColor: Color.fromRGBO(244, 245, 245, 1.0),
+
+      appBar: PreferredSize(
+          child: AppBar(
+//            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
+            brightness: Brightness.light,
+            bottomOpacity: 0,
+              elevation:0,
+          ),
+          preferredSize: Size(double.infinity, 0)),
+      backgroundColor: Color(0xffF4F4F4),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
