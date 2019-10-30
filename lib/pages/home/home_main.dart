@@ -4,13 +4,16 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/phoenix_header.dart';
 
 import 'package:xianyu_app/service/http_request.dart';
+
 import 'package:xianyu_app/model/BannerInfo.dart';
 import 'package:xianyu_app/model/TodayNews.dart';
 import 'package:xianyu_app/model/IndexCategory.dart';
+import 'package:xianyu_app/model/IndexExpert.dart';
 
 import 'swiper_div.dart';
 import 'today_news_div.dart';
 import 'index_category_div.dart';
+import 'index_expert_div.dart';
 
 class HomeMain extends StatefulWidget {
   _HomeMainState createState() => _HomeMainState();
@@ -25,7 +28,8 @@ class _HomeMainState extends State<HomeMain>
   TodayNews todayNews = TodayNews();
   // 精选测评
   List<IndexCategory> categoryList = [];
-
+  // 专家咨询
+  List<IndexExpert> expertList = [];
   @override
   void initState() {
     super.initState();
@@ -64,6 +68,7 @@ class _HomeMainState extends State<HomeMain>
                         SwiperDiv(bannerInfoList: this.bannerInfoList),
                         TodayNewsDiv(todayNews: this.todayNews),
                         IndexCategoryDiv(categoryList: this.categoryList,),
+                        IndexExpertDiv(expertList: this.expertList,),
                       ],
                     ),
                     bottomBouncing: false,
@@ -89,6 +94,7 @@ class _HomeMainState extends State<HomeMain>
     this.bannerInfoList = await HttpRequest().reqSwiperList();
     this.todayNews = await HttpRequest().reqTodayNews();
     this.categoryList = await HttpRequest().indexSelectCategory();
+    this.expertList = await HttpRequest().indexExpert();
     return 'ok';
   }
 }

@@ -66,7 +66,7 @@ class TodayNewsDiv extends StatelessWidget {
                   ),
                   // 今日选文的右侧信息展示
                   Container(
-                    width: ScreenUtil().setWidth(522),
+                    width: ScreenUtil().setWidth(510),
                     padding: EdgeInsets.only(left: ScreenUtil().setWidth(30.0)),
                     height: ScreenUtil().setHeight(180),
                     child: Column(

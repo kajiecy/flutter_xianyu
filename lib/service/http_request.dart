@@ -1,6 +1,7 @@
 import 'package:xianyu_app/model/BannerInfo.dart';
 import 'package:xianyu_app/model/TodayNews.dart';
 import 'package:xianyu_app/model/IndexCategory.dart';
+import 'package:xianyu_app/model/IndexExpert.dart';
 
 import 'package:xianyu_app/service/service_method.dart';
 import 'dart:convert';
@@ -11,6 +12,7 @@ const servicePath={
   'getSwiperList': serviceUrl+'/xianyu/indexImage/list', // 商家首页信息
   'todayNews': serviceUrl+'/xianyu/index/today/news', // 今日选文
   'indexSelectCategory': serviceUrl+'/xianyu/index/select/category', // 精选测评
+  'indexSelectExpert': serviceUrl+'/xianyu/index/select/expert', // 精选测评
 };
 class HttpRequest {
   Future reqSwiperList() async{
@@ -23,8 +25,12 @@ class HttpRequest {
     return todayNews;
   }
   Future indexSelectCategory() async{
-     List<IndexCategory> indexCategoryList = IndexCategory.fromJsonList(await request(servicePath['indexSelectCategory'], formData: []));
+    List<IndexCategory> indexCategoryList = IndexCategory.fromJsonList(await request(servicePath['indexSelectCategory'], formData: []));
 //    var result = ;
     return indexCategoryList;
+  }
+  Future indexExpert() async{
+    List<IndexExpert> indexExpertList = IndexExpert.fromJsonList(await request(servicePath['indexSelectExpert'], formData: []));
+    return indexExpertList;
   }
 }
