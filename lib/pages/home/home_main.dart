@@ -4,9 +4,13 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/phoenix_header.dart';
 
 import 'package:xianyu_app/service/http_request.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:xianyu_app/model/BannerInfo.dart';
 import 'package:xianyu_app/model/TodayNews.dart';
+import 'package:xianyu_app/model/IndexCategory.dart';
+
+import 'swiper_div.dart';
+import 'today_news_div.dart';
+import 'index_category_div.dart';
 
 class HomeMain extends StatefulWidget {
   _HomeMainState createState() => _HomeMainState();
@@ -15,11 +19,12 @@ class HomeMain extends StatefulWidget {
 class _HomeMainState extends State<HomeMain>
     with SingleTickerProviderStateMixin {
   ScrollController _scrollViewController;
-
 // banner信息
   List<BannerInfo> bannerInfoList = [];
 // 今日选文
   TodayNews todayNews = TodayNews();
+  // 精选测评
+  List<IndexCategory> categoryList = [];
 
   @override
   void initState() {
@@ -33,7 +38,6 @@ class _HomeMainState extends State<HomeMain>
     _scrollViewController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
 //    this.bannerInfoList = this.getBannerList();
@@ -45,7 +49,6 @@ class _HomeMainState extends State<HomeMain>
             return Container(
               height: ScreenUtil().setHeight(1300),
               child: Scaffold(
-
                 body: NestedScrollView(
                   controller: _scrollViewController,
                   headerSliverBuilder:
@@ -60,11 +63,13 @@ class _HomeMainState extends State<HomeMain>
                       children: <Widget>[
                         SwiperDiv(bannerInfoList: this.bannerInfoList),
                         TodayNewsDiv(todayNews: this.todayNews),
+                        IndexCategoryDiv(categoryList: this.categoryList,),
                       ],
                     ),
                     bottomBouncing: false,
                     onRefresh: () async {
                       print('触发onRefresh');
+                      await initData();
                     },
                     header: PhoenixHeader(),
                   ),
@@ -80,18 +85,17 @@ class _HomeMainState extends State<HomeMain>
   }
 
   Future initData() async {
+    setState((){});
     this.bannerInfoList = await HttpRequest().reqSwiperList();
     this.todayNews = await HttpRequest().reqTodayNews();
+    this.categoryList = await HttpRequest().indexSelectCategory();
     return 'ok';
   }
 }
-
 // 首页的头部搜索框
 class HomeHeader extends StatelessWidget {
   final bool boxIsScrolled;
-
   HomeHeader(this.boxIsScrolled);
-
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -122,59 +126,5 @@ class HomeHeader extends StatelessWidget {
           color: Colors.white,
         ),
         bottom: PreferredSize(child: Container(), preferredSize: Size(0, 0)));
-  }
-}
-
-// 首页轮播
-class SwiperDiv extends StatelessWidget {
-  final List<BannerInfo> bannerInfoList;
-
-  const SwiperDiv({this.bannerInfoList});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: ScreenUtil().setHeight(320),
-      width: ScreenUtil().setWidth(750),
-      child: Swiper(
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            child: Image.network(
-              "${qiniuUrl + bannerInfoList[index].image}",
-              fit: BoxFit.fill,
-            ),
-            onTap: () {},
-          );
-        },
-        itemCount: bannerInfoList.length,
-        pagination: SwiperPagination(),
-        autoplay: true,
-      ),
-    );
-  }
-}
-
-// 今日选文
-class TodayNewsDiv extends StatelessWidget {
-  final TodayNews todayNews;
-
-  TodayNewsDiv({this.todayNews});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-//    color: Color(0xffffff),
-      margin: EdgeInsets.only(top: 10),
-      decoration: BoxDecoration(
-        color: Color(0xffffffff)
-      ),
-      child: Row(
-        children: <Widget>[
-          Container(
-            child: Text('今日选文'),
-          ),
-        ],
-      ),
-    );
   }
 }

@@ -84,14 +84,12 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   void initState() {
-    print('1111111');
     currentPage = tabBodies[currentIndex];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('22222222');
     ScreenUtil.instance = ScreenUtil(width: 750,height: 1334)..init(context);
     return Scaffold(
 
