@@ -9,16 +9,17 @@ import 'package:xianyu_app/model/BannerInfo.dart';
 import 'package:xianyu_app/model/TodayNews.dart';
 import 'package:xianyu_app/model/IndexCategory.dart';
 import 'package:xianyu_app/model/IndexExpert.dart';
+import 'package:xianyu_app/model/IndexLesson.dart';
 
 import 'swiper_div.dart';
 import 'today_news_div.dart';
 import 'index_category_div.dart';
 import 'index_expert_div.dart';
+import 'index_lesson_div.dart';
 
 class HomeMain extends StatefulWidget {
   _HomeMainState createState() => _HomeMainState();
 }
-
 class _HomeMainState extends State<HomeMain>
     with SingleTickerProviderStateMixin {
   ScrollController _scrollViewController;
@@ -30,13 +31,14 @@ class _HomeMainState extends State<HomeMain>
   List<IndexCategory> categoryList = [];
   // 专家咨询
   List<IndexExpert> expertList = [];
+  // 推荐课程
+  List<IndexLesson> lessonList = [];
   @override
   void initState() {
     super.initState();
     _scrollViewController =
         ScrollController(initialScrollOffset: ScreenUtil().setHeight(0));
   }
-
   @override
   void dispose() {
     _scrollViewController.dispose();
@@ -69,6 +71,7 @@ class _HomeMainState extends State<HomeMain>
                         TodayNewsDiv(todayNews: this.todayNews),
                         IndexCategoryDiv(categoryList: this.categoryList,),
                         IndexExpertDiv(expertList: this.expertList,),
+                        IndexLessonDiv(lessonList: this.lessonList,),
                       ],
                     ),
                     bottomBouncing: false,
@@ -95,6 +98,7 @@ class _HomeMainState extends State<HomeMain>
     this.todayNews = await HttpRequest().reqTodayNews();
     this.categoryList = await HttpRequest().indexSelectCategory();
     this.expertList = await HttpRequest().indexExpert();
+    this.lessonList = await HttpRequest().indexLesson();
     return 'ok';
   }
 }
