@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget{
         onGenerateRoute: Application.router.generator,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          platform: TargetPlatform.iOS,
           primaryColor: Color.fromRGBO( 54, 115, 238,1),
         ),
         home: IndexPage(),

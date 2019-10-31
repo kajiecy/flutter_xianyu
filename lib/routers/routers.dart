@@ -4,13 +4,15 @@ import './router_handler.dart';
 
 class Routes{
   static String root = '/';
-  static String detailPage = '/detail';
+  static String searchIndex = '/search_index';
+  static String rightBackDemo = '/right_back_demo';
   static void configureRoutes(Router router){
     router.notFoundHandler = new Handler(
       handlerFunc:(BuildContext context,Map<String,List<String>> params){
         print('error ===> root was not found！！');
       }
     );
-//    router.define(detailPage, handler: detailsHandler);
+    router.define(searchIndex, handler: searchIndexHandler,transitionType: TransitionType.cupertino);
+    router.define(rightBackDemo, handler: testHandler,transitionType: TransitionType.cupertino);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/phoenix_header.dart';
+import 'package:xianyu_app/routers/application.dart';
 
 import 'package:xianyu_app/service/http_request.dart';
 
@@ -105,22 +106,30 @@ class _HomeMainState extends State<HomeMain>
 // 首页的头部搜索框
 class HomeHeader extends StatelessWidget {
   final bool boxIsScrolled;
+  TextEditingController textController = TextEditingController();
+
   HomeHeader(this.boxIsScrolled);
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
         title: Container(
           padding: EdgeInsets.only(top: ScreenUtil().setHeight(0)),
-          color: Color(0xffFBFBFB),
+          color: Color(0xffFFFfFf),
           child: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: ScreenUtil().setWidth(50.0),maxWidth: ScreenUtil().setWidth(750.0)),
-            child: new TextField(
+            child:new TextField(
+              controller: textController,
+              onTap: (){
+                print('open');
+              },
+              onSubmitted: (value){
+                print('submit:${value}');
+              },
               decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: ScreenUtil().setWidth(0.0)),
+                contentPadding:EdgeInsets.only(left: ScreenUtil().setWidth(0.0)),
                 hintText: '输入标题或内容',
                 hintStyle: TextStyle(color: Color(0xffC8C8C7), fontSize: ScreenUtil().setSp(24)),
-                prefixIcon: Icon(Icons.search,color: Color(0xffCACACB),size: ScreenUtil().setSp(36),),
+                prefixIcon: Icon(Icons.search,color: Color(0xffCACACB),size: ScreenUtil().setSp(36)),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(ScreenUtil().setSp(12)),borderSide: BorderSide.none),
                 filled: true,
                 fillColor: Color(0xffF4F4F4),

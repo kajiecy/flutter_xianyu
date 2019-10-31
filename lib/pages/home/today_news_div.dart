@@ -1,7 +1,11 @@
+import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xianyu_app/model/TodayNews.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:xianyu_app/service/http_request.dart';
+import 'package:xianyu_app/routers/application.dart';
+import 'package:xianyu_app/pages/home/search/search_index.dart';
 
 // 今日选文
 class TodayNewsDiv extends StatelessWidget {
@@ -39,7 +43,10 @@ class TodayNewsDiv extends StatelessWidget {
                     borderSide: BorderSide(color: Color(0xdd3673EE)),
                     textColor: Color(0xff3673EE),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)),side: BorderSide(width: 0.5)),
-                    onPressed: (){},
+                    onPressed: (){
+                      print('点击了，转跳到搜索页面');
+                      Application.router.navigateTo(context, '/search_index',transition: TransitionType.cupertino);
+                    },
                   ),
                 ),
               ],
