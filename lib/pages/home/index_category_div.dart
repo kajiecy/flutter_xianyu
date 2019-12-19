@@ -105,7 +105,7 @@ class IndexCategoryDiv extends StatelessWidget {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            width: ScreenUtil().setWidth(352),
+                            width: ScreenUtil().setWidth(332),
                           ),
                           Container(
                             child: Text(indexCategory.testNum.toString()+'人测过',

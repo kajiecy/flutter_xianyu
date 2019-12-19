@@ -44,8 +44,7 @@ class TodayNewsDiv extends StatelessWidget {
                     textColor: Color(0xff3673EE),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)),side: BorderSide(width: 0.5)),
                     onPressed: (){
-                      print('点击了，转跳到搜索页面');
-                      Application.router.navigateTo(context, '/search_index',transition: TransitionType.cupertino);
+                      Application.router.navigateTo(context, '/news_index',transition: TransitionType.cupertino);
                     },
                   ),
                 ),
@@ -106,6 +105,8 @@ class TodayNewsDiv extends StatelessWidget {
                         )
                         ),
                         Text(todayNews.description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: Color(0xff88898B),
                             fontSize: ScreenUtil().setSp(24.0),

@@ -69,6 +69,8 @@ flutter:
     - assets/img/lesson/mic.png
     - assets/img/lesson/play1.png
     - assets/img/lesson/video.png
+    - assets/icon/audio.png
+    - assets/icon/video.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

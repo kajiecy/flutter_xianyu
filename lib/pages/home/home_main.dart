@@ -24,9 +24,9 @@ class HomeMain extends StatefulWidget {
 class _HomeMainState extends State<HomeMain>
     with SingleTickerProviderStateMixin {
   ScrollController _scrollViewController;
-// banner信息
+  // banner信息
   List<BannerInfo> bannerInfoList = [];
-// 今日选文
+  // 今日选文
   TodayNews todayNews = TodayNews();
   // 精选测评
   List<IndexCategory> categoryList = [];
@@ -37,8 +37,7 @@ class _HomeMainState extends State<HomeMain>
   @override
   void initState() {
     super.initState();
-    _scrollViewController =
-        ScrollController(initialScrollOffset: ScreenUtil().setHeight(0));
+    _scrollViewController = ScrollController(initialScrollOffset: ScreenUtil().setHeight(0));
   }
   @override
   void dispose() {
@@ -58,12 +57,12 @@ class _HomeMainState extends State<HomeMain>
               child: Scaffold(
                 body: NestedScrollView(
                   controller: _scrollViewController,
-                  headerSliverBuilder:
-                      (BuildContext context, bool boxIsScrolled) {
+                  headerSliverBuilder:(BuildContext context, bool boxIsScrolled) {
                     return <Widget>[
                       HomeHeader(boxIsScrolled),
                     ];
                   },
+//                  physics: NeverScrollableScrollPhysics(),
                   // 首页下拉刷新页面
                   body: EasyRefresh(
                     child: ListView(

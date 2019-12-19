@@ -63,29 +63,135 @@ class IndexLessonDiv extends StatelessWidget {
   }
   // 精选测评循环item
   Widget categoryItem(IndexLesson item){
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(5),horizontal: ScreenUtil().setWidth(0)),
-      child:
-      Column(
+//    print()
+    String fileTypeIconName = item.fileType==1?'assets/icon/audio.png':'assets/icon/video.png';
+    return
+      Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(10),top: ScreenUtil().setHeight(5)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(5),horizontal: ScreenUtil().setWidth(0)),
+            child:
+            Column(
               children: <Widget>[
-                // 今日选文的左侧图片
                 Container(
-                  width: ScreenUtil().setWidth(135),
-                  height: ScreenUtil().setHeight(180),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: FadeInImage.assetNetwork(
-                      placeholder: "assets/img/placeholder135x180.png",
-                      image: qiniuUrl+item.listPic,
-                      fit: BoxFit.cover,
-                    ),
+                  margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(10),top: ScreenUtil().setHeight(5)),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      // 今日选文的左侧图片
+                      Container(
+                        width: ScreenUtil().setWidth(284),
+                        height: ScreenUtil().setHeight(160),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: FadeInImage.assetNetwork(
+                            placeholder: "assets/img/placeholder135x180.png",
+                            image: qiniuUrl+item.infoPic,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: ScreenUtil().setWidth(370),
+                        padding: EdgeInsets.only(left: ScreenUtil().setWidth(20)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              child: Text(
+                                item.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize:ScreenUtil().setSp(32),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              height: ScreenUtil().setHeight(125),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    item.playTimes!=null ?item.playTimes.toString()+'次播放': '0次播放',
+                                    style: TextStyle(
+                                      color: Color(0xff71859E),
+                                      fontSize: ScreenUtil().setSp(24),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text(
+                                    "免费",
+                                    style: TextStyle(
+                                      color: Color(0xffC49347),
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(10),horizontal: ScreenUtil().setWidth(20)),
+                                  decoration: BoxDecoration(
+//                              color: Color(0xF7F7F7),
+                                      color: Color(0xffF7F7f7),
+                                      borderRadius: BorderRadius.all(Radius.circular(20))
+                                  ),
+                                ),
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    ],
                   ),
                 ),
+                Divider(),
+              ],
+            ),
+          ),
+          item.vipPrice!=null&&item.vipPrice!=''?Positioned(
+            top: 5,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(15),vertical: ScreenUtil().setHeight(5)),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [Color(0xFFEBC766), Color(0xFFD69C00)],),
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(12),
+                  topLeft: Radius.circular(5)
+                ),
+              ),
+              child: Text('VIP',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: ScreenUtil().setSp(20),
+                  fontWeight: FontWeight.w800
+                ),
+              ),
+            ),
+          ):Container(),
+          Positioned(
+            top: 73,
+            left: 123,
+            child: Container(
+              width: ScreenUtil().setWidth(52),
+              height: ScreenUtil().setHeight(28),
+              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(3),vertical: ScreenUtil().setHeight(3)),
+              decoration: BoxDecoration(
+                  color: Color(0x99cccccc),
+                borderRadius: BorderRadius.all(Radius.circular(30))
+              ),
+              child: Image.asset(fileTypeIconName,),
+
+            ),
+          ),
+        ],
+      );
+
+      ;
+  }
+}
+
+/*
                 // 今日选文的右侧信息展示
                 Container(
                   width: ScreenUtil().setWidth(522),
@@ -178,13 +284,4 @@ class IndexLessonDiv extends StatelessWidget {
                     ],
                   ),
                 ),
-
-              ],
-            ),
-          ),
-          Divider(),
-        ],
-      ),
-    );
-  }
-}
+ */

@@ -27,7 +27,7 @@ class IndexExpert {
   Null weekReadNum;
   int typeId;
   int isSelect;
-  Null selectSort;
+  int selectSort;
   Null count;
   Null countOrder;
   Null countOrderSuccess;

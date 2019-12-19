@@ -1,0 +1,26 @@
+class CategoryType {
+  int id;
+  String name;
+
+  CategoryType({this.id, this.name});
+
+  CategoryType.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    return data;
+  }
+
+  static List<CategoryType> fromJsonList(List<dynamic> jsonList) {
+    List<CategoryType> categoryTypeList = [];
+    jsonList.forEach((item)=>{
+      categoryTypeList.add(CategoryType.fromJson(item))
+    });
+    return categoryTypeList;
+  }
+}

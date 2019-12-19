@@ -77,7 +77,7 @@ class _IndexPageState extends State<IndexPage> {
     ConsultMain(),
     UserMain(),
   ];
-  int currentIndex = 0;
+  int currentIndex = 1;
 //  int currentIndex = Provide.value<AppProvide>(context);
   var currentPage;
 

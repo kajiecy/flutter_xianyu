@@ -13,6 +13,8 @@ class IndexLesson {
   int isIndexShow;
   int showSort;
   String introduction;
+  int sort;
+  String vipPrice;
   Null coursewareList;
   Null lessonTypeName;
   Null coursewareCount;
@@ -36,6 +38,8 @@ class IndexLesson {
         this.isIndexShow,
         this.showSort,
         this.introduction,
+        this.sort,
+        this.vipPrice,
         this.coursewareList,
         this.lessonTypeName,
         this.coursewareCount,
@@ -59,6 +63,8 @@ class IndexLesson {
     isIndexShow = json['isIndexShow'];
     showSort = json['showSort'];
     introduction = json['introduction'];
+    sort = json['sort'];
+    vipPrice = json['vipPrice'];
     coursewareList = json['coursewareList'];
     lessonTypeName = json['lessonTypeName'];
     coursewareCount = json['coursewareCount'];
@@ -84,6 +90,8 @@ class IndexLesson {
     data['isIndexShow'] = this.isIndexShow;
     data['showSort'] = this.showSort;
     data['introduction'] = this.introduction;
+    data['sort'] = this.sort;
+    data['vipPrice'] = this.vipPrice;
     data['coursewareList'] = this.coursewareList;
     data['lessonTypeName'] = this.lessonTypeName;
     data['coursewareCount'] = this.coursewareCount;
