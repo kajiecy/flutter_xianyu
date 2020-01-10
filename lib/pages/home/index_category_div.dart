@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provide/provide.dart';
 import 'package:xianyu_app/model/IndexCategory.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:xianyu_app/provide/app_provide.dart';
 import 'package:xianyu_app/service/http_request.dart';
 
 // 精选测评
@@ -24,7 +26,7 @@ class IndexCategoryDiv extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  '精选测评',
+                  '精选测评'+Provide.value<AppProvide>(context).homeTabsIndex.toString(),
                   style: TextStyle(
                     fontSize: ScreenUtil().setSp(32),
                     fontWeight: FontWeight.w600,
@@ -34,13 +36,17 @@ class IndexCategoryDiv extends StatelessWidget {
                 Container(
                   width: ScreenUtil().setWidth(105),
                   height: ScreenUtil().setHeight(50),
-                  child:OutlineButton(
-                    child: Text('更多',style: TextStyle(fontSize: ScreenUtil().setSp(22)),),
-                    borderSide: BorderSide(color: Color(0xdd3673EE)),
-                    textColor: Color(0xff3673EE),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)),side: BorderSide(width: 0.5)),
-                    onPressed: (){},
-                  ),
+                  child: Provide<AppProvide>(builder: (builder, child, appProvide) {
+                    return OutlineButton(
+                      child: Text('更多',style: TextStyle(fontSize: ScreenUtil().setSp(22)),),
+                      borderSide: BorderSide(color: Color(0xdd3673EE)),
+                      textColor: Color(0xff3673EE),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)),side: BorderSide(width: 0.5)),
+                      onPressed: (){
+                        appProvide.changeHomeTabsIndex(1);
+                      },
+                    );
+                  }),
                 ),
               ],
             ),

@@ -1,4 +1,4 @@
-class IndexLesson {
+class CourseInfo {
   int id;
   int fileType;
   String title;
@@ -12,19 +12,19 @@ class IndexLesson {
   String description;
   int isIndexShow;
   int showSort;
-  String introduction;
+  Null introduction;
   int sort;
   String vipPrice;
   Null coursewareList;
   Null lessonTypeName;
   int coursewareCount;
   int commentCount;
-  int reportCount;
-  int collectionCount;
+  Null reportCount;
+  Null collectionCount;
   int buyCount;
 
-  IndexLesson(
-      { this.id,
+  CourseInfo(
+      {this.id,
         this.fileType,
         this.title,
         this.lessonTypeId,
@@ -48,7 +48,7 @@ class IndexLesson {
         this.collectionCount,
         this.buyCount});
 
-  IndexLesson.fromJson(Map<String, dynamic> json) {
+  CourseInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     fileType = json['fileType'];
     title = json['title'];
@@ -101,11 +101,12 @@ class IndexLesson {
     data['buyCount'] = this.buyCount;
     return data;
   }
+
   static fromJsonList(List<dynamic> jsonList) {
-    List<IndexLesson> resultList = [];
+    List<CourseInfo> list = [];
     jsonList.forEach((item)=>{
-      resultList.add(IndexLesson.fromJson(item))
+      list.add(CourseInfo.fromJson(item))
     });
-    return resultList;
+    return list;
   }
 }

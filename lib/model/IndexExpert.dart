@@ -12,7 +12,7 @@ class IndexExpert {
   String interviewConsult;
   double interviewPrice;
   String status;
-  Null createTime;
+  int createTime;
   int settleTime;
   String educationDescription;
   String employmentDescription;
@@ -24,15 +24,15 @@ class IndexExpert {
   String avatar;
   String personImage;
   String personProfile;
-  Null weekReadNum;
+  int weekReadNum;
   int typeId;
   int isSelect;
   int selectSort;
-  Null count;
-  Null countOrder;
-  Null countOrderSuccess;
-  Null countOrderOver;
-  Null typeName;
+  int count;
+  int countOrder;
+  int countOrderSuccess;
+  int countOrderOver;
+  String typeName;
 
   IndexExpert(
       {this.id,

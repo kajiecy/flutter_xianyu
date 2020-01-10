@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/phoenix_header.dart';
-import 'package:xianyu_app/routers/application.dart';
+import 'package:provide/provide.dart';
+import 'package:xianyu_app/provide/app_provide.dart';
 
 import 'package:xianyu_app/service/http_request.dart';
 
@@ -72,6 +73,24 @@ class _HomeMainState extends State<HomeMain>
                         IndexCategoryDiv(categoryList: this.categoryList,),
                         IndexExpertDiv(expertList: this.expertList,),
                         IndexLessonDiv(lessonList: this.lessonList,),
+                        Container(
+                          width: ScreenUtil().setWidth(105),
+                          height: ScreenUtil().setHeight(50),
+                          child: Provide<AppProvide>(builder: (builder, child, appProvide) {
+                            return OutlineButton(
+                              child: Text('更多',style: TextStyle(fontSize: ScreenUtil().setSp(22)),),
+                              borderSide: BorderSide(color: Color(0xdd3673EE)),
+                              textColor: Color(0xff3673EE),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30)),side: BorderSide(width: 0.5)),
+                              onPressed: (){
+                                setState(() {
+                                  print(111111111111111);
+                                  appProvide.changeHomeTabsIndex(1);
+                                });
+                              },
+                            );
+                          }),
+                        ),
                       ],
                     ),
                     bottomBouncing: false,

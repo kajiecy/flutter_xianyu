@@ -11,14 +11,14 @@ class TodayNews {
   String pic;
   String description;
   String content;
-  Null newsTypeName;
-  Null reportCount;
-  Null readCount;
-  Null commentCount;
-  Null likeCount;
+  String newsTypeName;
+  int reportCount;
+  int readCount;
+  int commentCount;
+  int likeCount;
 
   TodayNews(
-      {this.id,
+      { this.id,
         this.title,
         this.typeId,
         this.author,
@@ -35,7 +35,6 @@ class TodayNews {
         this.readCount,
         this.commentCount,
         this.likeCount});
-
   TodayNews.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
@@ -76,5 +75,12 @@ class TodayNews {
     data['commentCount'] = this.commentCount;
     data['likeCount'] = this.likeCount;
     return data;
+  }
+  static fromJsonList(List<dynamic> jsonList) {
+    List<TodayNews> resultList = [];
+    jsonList.forEach((item)=>{
+      resultList.add(TodayNews.fromJson(item))
+    });
+    return resultList;
   }
 }

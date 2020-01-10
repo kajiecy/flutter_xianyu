@@ -7,6 +7,7 @@ class Routes{
   static String searchIndex = '/search_index';
   static String newsIndex = '/news_index';
   static String rightBackDemo = '/right_back_demo';
+  static String newsContent = '/news_content';
   static void configureRoutes(Router router){
     router.notFoundHandler = new Handler(
       handlerFunc:(BuildContext context,Map<String,List<String>> params){
@@ -16,5 +17,6 @@ class Routes{
     router.define(searchIndex, handler: searchIndexHandler,transitionType: TransitionType.cupertino);
     router.define(newsIndex, handler: newsIndexHandler,transitionType: TransitionType.cupertino);
     router.define(rightBackDemo, handler: testHandler,transitionType: TransitionType.cupertino);
+    router.define(newsContent, handler: newsHandler,transitionType: TransitionType.cupertino);
   }
 }

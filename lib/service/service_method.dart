@@ -14,8 +14,8 @@ Future request(url,{formData}) async {
     }else{
       response = await dio.post(url,data: formData);
     }
+    print(response);
     if(response.statusCode==200){
-//      print();
       if(response.data['code']==0){
         return response.data['data'];
       }else{

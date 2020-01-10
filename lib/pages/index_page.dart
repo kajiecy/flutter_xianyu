@@ -70,54 +70,51 @@ class _IndexPageState extends State<IndexPage> {
       ),
     ),
   ];
-  final List<Widget> tabBodies = [
-    HomeMain(),
-    TestMain(),
-    CourseMain(),
-    ConsultMain(),
-    UserMain(),
-  ];
-  int currentIndex = 1;
+  final List<Widget> tabBodies = [];
+  int currentIndex = 0;
 //  int currentIndex = Provide.value<AppProvide>(context);
   var currentPage;
 
 
   @override
   void initState() {
-    currentPage = tabBodies[currentIndex];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 750,height: 1334)..init(context);
-    return Scaffold(
+    currentIndex = Provide.value<AppProvide>(context).homeTabsIndex;
+    currentPage = Provide.value<AppProvide>(context).currentPage;
 
-      appBar: PreferredSize(
-          child: AppBar(
+    ScreenUtil.instance = ScreenUtil(width: 750,height: 1334)..init(context);
+    return Provide<AppProvide>(builder: (builder, child, appProvide) {
+        return Scaffold(
+          appBar: PreferredSize(
+              child: AppBar(
 //            backgroundColor: Colors.transparent,
-            backgroundColor: Colors.white,
-            brightness: Brightness.light,
-            bottomOpacity: 0,
-              elevation:0,
+                backgroundColor: Colors.white,
+                brightness: Brightness.light,
+                bottomOpacity: 0,
+                elevation:0,
+              ),
+              preferredSize: Size(double.infinity, 0)),
+          backgroundColor: Color(0xffF4F4F4),
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: currentIndex,
+            items: bottomTabs,
+            onTap: (index){
+              setState((){
+                appProvide.changeHomeTabsIndex(index);
+//                currentPage = Provide.value<AppProvide>(context).currentPage;
+              });
+            },
           ),
-          preferredSize: Size(double.infinity, 0)),
-      backgroundColor: Color(0xffF4F4F4),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        items: bottomTabs,
-        onTap: (index){
-          setState((){
-            currentIndex = index;
-            currentPage = tabBodies[currentIndex];
-          });
-        },
-      ),
-      body: IndexedStack(
-        index: currentIndex,
-        children: tabBodies,
-      ),
-    );
+          body: IndexedStack(
+            index: currentIndex,
+            children: Provide.value<AppProvide>(context).tabBodies,
+          ),
+        );
+      });
   }
 }

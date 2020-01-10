@@ -4,7 +4,11 @@ import 'package:xianyu_app/service/http_request.dart';
 import 'package:xianyu_app/model/CategoryType.dart';
 import 'package:xianyu_app/model/ListDao4Page.dart';
 import 'package:xianyu_app/model/CategoryInfo.dart';
+import 'package:xianyu_app/model/PageInfo.dart';
 
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_easyrefresh/material_header.dart';
+import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
 
 // DropdownButton 默认按钮的实例
 // isDisabled:是否是禁用，isDisabled 默认为true
@@ -16,11 +20,16 @@ class TestMain extends StatefulWidget {
   _TestMainState createState() => _TestMainState();
 }
 
-class _TestMainState extends State<TestMain> with SingleTickerProviderStateMixin {
+class _TestMainState extends State<TestMain> with TickerProviderStateMixin {
   TextEditingController textController = TextEditingController();
   TabController _tabController;
-  List<CategoryType> categoryList = [];// 测评类型列表
-  ListDao4Page<CategoryInfo> categoryInfoPage;
+  AnimationController _animationController;
+  List<CategoryType> categoryTypeList = [];// 测评类型列表
+  ListDao4Page<CategoryInfo> categoryInfoPage = ListDao4Page<CategoryInfo>(null,PageInfo(pageSize: 10,currentPage: 1,last: false));
+  EasyRefreshController _easyRefreshController;
+  int currentTypeId ;
+  bool _loadState = false;
+  List<CategoryInfo> categoryList = [];
 
   List<DropdownMenuItem> generateItemList() {
     final List<DropdownMenuItem> items = List();
@@ -38,11 +47,10 @@ class _TestMainState extends State<TestMain> with SingleTickerProviderStateMixin
     items.add(item4);
     return items;
   }
-
-
   @override
   void initState() {
     super.initState();
+    _easyRefreshController = EasyRefreshController();
   }
   @override
   void dispose() {
@@ -56,12 +64,14 @@ class _TestMainState extends State<TestMain> with SingleTickerProviderStateMixin
       builder: (context,snapshot){
         if(snapshot.hasData){
           if(_tabController==null){
-            _tabController = TabController(vsync: this, length: this.categoryList.length);
+            _animationController = AnimationController(vsync: this);
+            _tabController = TabController(vsync: this, length: this.categoryTypeList.length);
           }
           return Scaffold(
               body: SafeArea(
                   child: Column(
                     children: <Widget>[
+                      // 头部的输入框 start
                       Container(
                         padding: EdgeInsets.only(top: ScreenUtil().setHeight(20),left: ScreenUtil().setWidth(20),right: ScreenUtil().setWidth(20),bottom: ScreenUtil().setHeight(20)),
                         color: Color(0xffFFFfFf),
@@ -87,7 +97,7 @@ class _TestMainState extends State<TestMain> with SingleTickerProviderStateMixin
                           ),
                         ),
                       ),
-  //                ------------tab标签 start------------
+                      //                ------------tab标签 start------------
                       Container(
                         alignment: Alignment.topLeft,
                         margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(20)),
@@ -108,13 +118,68 @@ class _TestMainState extends State<TestMain> with SingleTickerProviderStateMixin
                           unselectedLabelStyle: TextStyle(
                             fontSize: ScreenUtil().setSp(28.0),
                           ),
-                          tabs: categoryList.map((item){return Tab(text: item.name,);}).toList(),
-                          onTap: (index){
-                            print(index);
+                          tabs: categoryTypeList.map((item){return Tab(text: item.name,);}).toList(),
+                          onTap: (index) async {
+                            setState((){
+                              this.currentTypeId = categoryTypeList[index].id;
+                            });
+                            this.categoryInfoPage = await HttpRequest().categoryList(currPage: 1,pageSize: 10,typeId: this.currentTypeId,orderBy:selectItemValue);
                           },
                         ),
                       ),
-  //                ------------tab标签 end------------
+
+                      // 内容标题 及 排序选择
+                      Container(
+                        width: ScreenUtil().setWidth(750),
+                        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(20),vertical: ScreenUtil().setHeight(20)),
+                        margin: EdgeInsets.only(bottom: 1),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(color: Color(0xffeeeeee),offset: Offset(1, 1),spreadRadius: 0),
+                            ]
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('贤于测评',
+                              style: TextStyle(
+                                  fontSize:ScreenUtil().setSp(36),
+                                  fontWeight: FontWeight.w500
+                              ),
+                            ),
+                            Container(
+                              width: ScreenUtil().setWidth(165),
+                              height: ScreenUtil().setHeight(54),
+                              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(20)),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                                boxShadow:[new BoxShadow(color: Color(0xffcccccc),blurRadius: 2.0,offset: Offset(0.5, 1.5))],
+                              ),
+                              child:DropdownButtonHideUnderline(
+                                child:DropdownButton(
+                                  hint: Text(changeOrderText(selectItemValue)),
+                                  style: TextStyle(
+                                    color: Color(0xff000000),
+                                  ),
+                                  icon: Icon(Icons.arrow_drop_down,color: Color(0xff0E7EFF),),
+                                  iconSize: ScreenUtil().setSp(52),
+                                  value: selectItemValue,
+                                  items: generateItemList(),
+                                  onChanged: (T) async {
+                                    setState(() {
+                                      selectItemValue=T;
+                                    });
+                                    this.categoryInfoPage = await HttpRequest().categoryList(currPage: 1,pageSize: 10,typeId: this.currentTypeId,orderBy:selectItemValue);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // 正文内容
                       Container(
                         width: ScreenUtil().setWidth(750),
                         padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(20),vertical: ScreenUtil().setHeight(10)),
@@ -124,50 +189,46 @@ class _TestMainState extends State<TestMain> with SingleTickerProviderStateMixin
                         child: Column(
                           children: <Widget>[
                             Container(
-                              width: ScreenUtil().setWidth(750),
-                              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10),vertical: ScreenUtil().setHeight(20)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text('贤于测评',
-                                    style: TextStyle(
-                                        fontSize:ScreenUtil().setSp(36),
-                                        fontWeight: FontWeight.w500
-                                    ),
-                                  ),
-                                  Container(
-                                    width: ScreenUtil().setWidth(165),
-                                    height: ScreenUtil().setHeight(54),
-                                    padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(20)),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                                      boxShadow:[new BoxShadow(color: Color(0xffcccccc),blurRadius: 2.0,offset: Offset(0.5, 1.5))],
-                                    ),
-                                    child:DropdownButtonHideUnderline(
-                                      child:DropdownButton(
-                                        hint: Text(changeOrderText(selectItemValue)),
-                                        style: TextStyle(
-                                            color: Color(0xff000000)
-                                        ),
-                                        icon: Icon(Icons.arrow_drop_down,color: Color(0xff0E7EFF),),
-                                        iconSize: ScreenUtil().setSp(52),
-                                        value: selectItemValue,
-                                        items: generateItemList(),
-                                        onChanged: (T) {
-                                          setState(() {
-                                            selectItemValue=T;
-                                          });
-                                        },
+                              padding: EdgeInsets.all(0),
+                              alignment: Alignment.topLeft,
+//                              decoration: BoxDecoration(color: Colors.amberAccent),
+                              height: ScreenUtil().setHeight(874),
+                              child: this.categoryList.length!=0?EasyRefresh(
+                                controller: _easyRefreshController,
+                                child: ListView.builder(
+                                  padding: EdgeInsets.all(0),
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: this.categoryList.length,
+                                  itemBuilder: (context,index){
+                                    return listItemWidget(this.categoryList[index]);
+                                  },
+                                ),
+                                bottomBouncing: !categoryInfoPage.pageInfo.last,
+                                onRefresh: () async {
+                                  await initData();
+                                },
+                                onLoad: () async {
+                                  this._loadState = true;
+                                  await onloadListInfo(currentPage: categoryInfoPage.pageInfo.currentPage+1);
+                                },
+                                header: MaterialHeader(
+                                  valueColor: ColorTween(
+                                    begin: Color(0xff0E7EFF),
+                                    end: Color(0xff0E7EFF),
+                                  ).animate(
+                                    CurvedAnimation(
+                                      parent: _animationController,
+                                      curve: Interval(
+                                        0.5,
+                                        0.75,
+                                        curve: Curves.linear,
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              child: Text('111'),
+                                ),
+                                footer: BallPulseFooter(),
+                              )
+                                  :Center(child: Text('暂无数据'),),
                             ),
                           ],
                         ),
@@ -181,23 +242,37 @@ class _TestMainState extends State<TestMain> with SingleTickerProviderStateMixin
         }
       },
     );
-
   }
-  Future initData() async {
-    setState((){});
-    this.categoryList = await HttpRequest().categoryTypeList(currPage: 0,pageSize: 8);
-    this.categoryInfoPage = await HttpRequest().categoryList(currPage: 1,pageSize: 10,typeId: '');
-
-//    _tabController.length = this.categoryList.length;
-//    _tabController = TabController(vsync: this, length: categoryList.length);
-
-//    this.todayNews = await HttpRequest().reqTodayNews();
-//    this.categoryList = await HttpRequest().indexSelectCategory();
-//    this.expertList = await HttpRequest().indexExpert();
-//    this.lessonList = await HttpRequest().indexLesson();
+  Future initData({currentPage}) async {
+    this._loadState;
+    if(this._loadState==false){
+      setState((){});
+      if(this.categoryTypeList.length==0){
+        this.categoryTypeList.add(new CategoryType(id: null,name: '全部'));
+//        this.categoryTypeList.addAll(await HttpRequest().categoryTypeList(currPage: 0,pageSize: 8));
+        this.categoryTypeList.addAll(await HttpRequest().getXianYuTypeList(2));
+      }
+      this.categoryInfoPage = await HttpRequest().categoryList(currPage: 1,pageSize: 10,typeId: this.currentTypeId,orderBy:selectItemValue);
+      this.categoryList = this.categoryInfoPage.infoList;
+    }else{
+      this._loadState = false;
+    }
     return 'ok';
   }
-
+  Future onloadListInfo({currentPage}) async {
+    var _currentPage = currentPage!=null?currentPage:this.categoryInfoPage.pageInfo.currentPage;
+    this.categoryInfoPage.pageInfo.currentPage = _currentPage;
+    this.categoryInfoPage = await HttpRequest().categoryList(currPage: _currentPage,pageSize: 10,typeId: this.currentTypeId,orderBy:selectItemValue);
+    this.categoryList.addAll(this.categoryInfoPage.infoList);
+    if(this.categoryInfoPage.pageInfo.last&&this.categoryList.last.id != null){
+      this.categoryList.add(new CategoryInfo());
+    }else if(this.categoryInfoPage.pageInfo.last&&this.categoryList.last.id == null){
+//      this._easyRefreshController.resetLoadStateCallBack();
+    }
+//    _easyRefreshController.resetRefreshState();
+    setState((){});
+    return 'ok';
+  }
   String changeOrderText(String orderType){
     String resultText = '默认';
     switch (orderType){
@@ -211,14 +286,96 @@ class _TestMainState extends State<TestMain> with SingleTickerProviderStateMixin
     return resultText;
   }
 
-  void listItemWidget(){
-
+  Widget listItemWidget(CategoryInfo itemInfo){
+    if(itemInfo.id!=null){
+      return
+        Column(
+          children: <Widget>[
+            Container(
+              height: ScreenUtil().setHeight(200),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      // color: Colors.amberAccent
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 10
+                    ),
+                    width:ScreenUtil().setWidth(500),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height:ScreenUtil().setHeight(115),
+                          child: Text(
+                            itemInfo.categoryName,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(32),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          itemInfo.categoryTitle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Color(0xff88898B),
+                            fontSize: ScreenUtil().setSp(28),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: ScreenUtil().setHeight(150),
+                    decoration: BoxDecoration(
+//                      color: Colors.orange
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child:ClipRRect(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(5),topRight: Radius.circular(5)),
+                            child: FadeInImage.assetNetwork(
+                              placeholder: "assets/img/placeholder135x180.png",
+                              image: "${qiniuUrl + itemInfo.image}",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          width: ScreenUtil().setWidth(190),
+                          height: ScreenUtil().setHeight(110),
+                        ),
+                        Container(
+                          height: ScreenUtil().setHeight(40),
+                          width: ScreenUtil().setWidth(190),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(0, 0, 0, 0.2),
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(5),bottomLeft: Radius.circular(5))
+                          ),
+                          child: Text(itemInfo.testNum.toString()+'人测过',style: TextStyle(color: Colors.white),),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(height: 1,),
+          ],
+        );
+    }else{
+      return
+        Container(
+          padding: EdgeInsets.all(ScreenUtil().setWidth(20)),
+          child: Center(
+            child: Text('已经到最底了~！',style: TextStyle(fontSize: ScreenUtil().setSp(32)),),
+          ),
+        );
+    }
   }
 }
 
-//class TabWidget extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Container();
-//  }
-//}
